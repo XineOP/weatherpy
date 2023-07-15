@@ -104,6 +104,28 @@ class Weatherpy:
         return f"Weatherpy({self.user_agent})"
 
 class Station(Weatherpy):
+    """
+    Class to represent the data and functions of a NWS observation station
+
+    Attributes:
+    -----------
+    id: str
+        The station ID of the observation station
+    geometry: str
+        The lat/lon geolocation of the observation station
+    elevation: str
+        The elevation of the observation station in meters
+    timezone: str
+        A string representation of the observation station's timezone
+        (e.g. 'US/Los Angeles')
+    
+    Methods:
+    --------
+    query()
+        Initializes the object by querying the NWS API for the associated ID
+    from_json(input: dict)
+        Initializes a list of Station objects from a JSON dictionary
+    """
     def __init__(self, id: str):
         super().__init__()
         self._id = id
