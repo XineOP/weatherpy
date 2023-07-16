@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "weatherpy"
+authors = [
+    {name = "Zac McFarland", email = "zaccheus.mcfarland@gmail.com"},
+    {name = "Jennifer McFarland", email="jennifer.leigh.mcfarland@gmail.com"}
+]
+description = "Python wrapper for the NOAA National Weather Service REST API"
+version = "0.0.1"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+]
+dependencies = [
+    "requests"
+]
