@@ -86,21 +86,19 @@ class Station:
             limit: int = 500,
             cursor: str = None,
             raw: bool = False,
-    ) -> dict | list:
+    ) -> str | list:
         """
         Requests a list of all observation stations available
         
         This function queries the NWS API for a list of observation stations. It
-        can also query for stations by ID or state/marine region.
+        can also query for stations by state/marine region.
 
         Parameters:
         -----------
-        id : str, list, None, default None
-            Specific station ID(s) to query for. If :const:`None`, will not query
-            for specific ID(s)
         state : str, list, None, default None
-            Specific state(s) or maritime region(s) to query for. if :const:`None`,
-            will not query for specific state(s) or maritime region(s)
+            Specific state(s) or maritime region(s) to query for. if
+            :const:`None`, will not query for specific state(s) or maritime
+            region(s)
         limit : int, default 500
             The maximum number of results to accept.
         cursor : str, None, default None
@@ -116,12 +114,17 @@ class Station:
         """
 
         endpoint = wp.api_url + '/stations'
+
         params = {}
         if state:
             params['state'] = state
         if cursor:
             params['cursor'] = cursor
-        params['limit'] = limit
+        
+        if type(limit) != int:
+            raise ValueError("'limit' must be of type 'int'")
+        else:
+            params['limit'] = limit
 
         headers = {
             'Accept': 'application/ld+json',
@@ -136,6 +139,9 @@ class Station:
             params=params,
             timeout=wp.request_timeout
         )
+        if r.response_code != 200:
+            raise Exception('API returned code ' + str(r.status_code))
+
         if raw:
             return r.text
         else:
