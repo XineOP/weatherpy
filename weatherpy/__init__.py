@@ -1,5 +1,6 @@
 # Class imports
 from weatherpy.station import Station
+from weatherpy.unit import Unit
 
 # Module global variables
 api_url = 'https://api.weather.gov'
