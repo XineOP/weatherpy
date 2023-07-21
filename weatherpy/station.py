@@ -139,7 +139,7 @@ class Station:
             params=params,
             timeout=wp.request_timeout
         )
-        if r.response_code != 200:
+        if r.status_code != 200:
             raise Exception('API returned code ' + str(r.status_code))
 
         if raw:
