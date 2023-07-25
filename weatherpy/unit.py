@@ -37,6 +37,9 @@ class Unit():
         return f'{class_name} ({self.unit_code}, {self.value}, {self.max_value}, {self.min_value}, {self.quality_control})'
     def __str__(self): # Allow the unit to be represented directly as a number
         return str(self.value)
+    def __float__(self):
+        return float(self.value)
+    def __int__(self):
+        return round(self.value)
     # TODO: Add dunder methods to enable some math functions like addition and subtraction
     # TODO: Add dunder methods to enable comparison
-    # TODO: Add dunder methods to return int/float representation of the unit value
