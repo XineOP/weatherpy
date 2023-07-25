@@ -31,7 +31,7 @@ class Unit():
     def quality_control(self):
         return self._quality_control
 
-    # Dunder methods
+    # Representation dunders
     def __repr__(self):
         class_name = self.__class__.__name__
         return f'{class_name} ({self.unit_code}, {self.value}, {self.max_value}, {self.min_value}, {self.quality_control})'
@@ -41,5 +41,57 @@ class Unit():
         return float(self.value)
     def __int__(self):
         return round(self.value)
-    # TODO: Add dunder methods to enable some math functions like addition and subtraction
-    # TODO: Add dunder methods to enable comparison
+    
+    # Comparison dunders
+    def __eq__(self, other):
+        if type(other) != type(self):
+            raise TypeError(f'Incompatible unit types {type(self).__name__} and {type(other).__name__}')
+        else:
+            return True if self.value == other.value else False
+    def __ne__(self, other):
+        if type(other) != type(self):
+            raise TypeError(f'Incompatible unit types {type(self).__name__} and {type(other).__name__}')
+        else:
+            return True if self.value != other.value else False
+    def __lt__(self, other):
+        if type(other) != type(self):
+            raise TypeError(f'Incompatible unit types {type(self).__name__} and {type(other).__name__}')
+        else:
+            return True if self.value < other.value else False
+    def __le__(self, other):
+        if type(other) != type(self):
+            raise TypeError(f'Incompatible unit types {type(self).__name__} and {type(other).__name__}')
+        else:
+            return True if self.value <= other.value else False
+    def __gt__(self, other):
+        if type(other) != type(self):
+            raise TypeError(f'Incompatible unit types {type(self).__name__} and {type(other).__name__}')
+        else:
+            return True if self.value > other.value else False
+    def __ge__(self, other):
+        if type(other) != type(self):
+            raise TypeError(f'Incompatible unit types {type(self).__name__} and {type(other).__name__}')
+        else:
+            return True if self.value >= other.value else False
+        
+    # Math dunders
+    def __add__(self, other):
+        if type(other) != type(self):
+            raise TypeError(f'Incompatible unit types {type(self).__name__} and {type(other).__name__}')
+        else:
+            return self.value + other.value
+    def __sub__(self, other):
+        if type(other) != type(self):
+            raise TypeError(f'Incompatible unit types {type(self).__name__} and {type(other).__name__}')
+        else:
+            return self.value - other.value
+    def __mul__(self, other):
+        if type(other) != type(self):
+            raise TypeError(f'Incompatible unit types {type(self).__name__} and {type(other).__name__}')
+        else:
+            return self.value * other.value
+    def __truediv__(self, other):
+        if type(other) != type(self):
+            raise TypeError(f'Incompatible unit types {type(self).__name__} and {type(other).__name__}')
+        else:
+            return self.value / other.value
