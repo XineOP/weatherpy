@@ -1,4 +1,5 @@
 class Unit():
+    pretty_unit_codes = {} # This dictionary should be filled out in subclasses
     def __init__(
             self,
             unitCode: str,
@@ -14,10 +15,16 @@ class Unit():
         self._quality_control = qualityControl
     
     # Getters and setters
-    # TODO: add properties for pretty representations of unit code (e.g km/h instead of wmoUnit:km_h-1)
     @property
     def unit_code(self):
         return self._unit_code
+    @property
+    def unit_pretty(self):
+        unit_repr = self.pretty_unit_codes.get(self.unit_code)
+        if unit_repr is None:
+            raise ValueError(f'Unit code {self.unit_code} not found')
+        else:
+            return unit_repr
     @property
     def value(self):
         return self._value
@@ -35,8 +42,11 @@ class Unit():
     def __repr__(self):
         class_name = self.__class__.__name__
         return f'{class_name} ({self.unit_code}, {self.value}, {self.max_value}, {self.min_value}, {self.quality_control})'
-    def __str__(self): # Allow the unit to be represented directly as a number
-        return str(self.value)
+    def __str__(self):
+        """Calling str() on a Unit subclass will return the 'beautified'
+        representation of the unit, e.g. '40 km/h'. If you wish to convert the
+        raw value into a string, call str(object.value)"""
+        return f'{str(self.value)} {self.unit_pretty}'
     def __float__(self):
         return float(self.value)
     def __int__(self):
