@@ -151,6 +151,9 @@ class Station:
     @property
     def id(self):
         return self._id
+    @id.setter
+    def id(self, value):
+        self._id = value
     @property
     def elevation(self):
         return self._elevation
