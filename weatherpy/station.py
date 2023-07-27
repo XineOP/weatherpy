@@ -1,5 +1,4 @@
-import requests
-import weatherpy as wp
+from .weatherpy import Weatherpy
 
 class Station:
     """
@@ -24,32 +23,27 @@ class Station:
     from_json(input: dict)
         Initializes a list of Station objects from a JSON dictionary
     """
-    def __init__(self, id: str):
+    def __init__(self, api: Weatherpy, id: str):
+        self._api = api
         self._id = id
-        self._headers = {
-            'Accept': 'application/ld+json',
-            'User-Agent': f'({wp.user_agent_client}, {wp.user_agent_email})'
-        }
     
     def query(self):
         """Runs the API request to fully initialize the Station object"""
-        endpoint = wp.api_url + '/stations/' + self.id
-        r = requests.get(endpoint, headers=self._headers, timeout=wp.request_timeout)
-        if r.status_code != 200:
-            raise Exception('API returned code ' + str(r.status_code))
-        else:
-            data = r.json()
-            self._geometry = data.get('geometry')
-            self._elevation = data.get('elevation')
-            self._name = data.get('name')
-            self._timezone = data.get('timeZone')
-            self._forecast = data.get('forecast')
-            self._county = data.get('county')
-            self._fire_weather_zone = data.get('fireWeatherZone')
+        endpoint = '/stations/' + self.id
+        r = self._api.query(endpoint)
+        data = r.json()
+
+        self._geometry = data.get('geometry')
+        self._elevation = data.get('elevation')
+        self._name = data.get('name')
+        self._timezone = data.get('timeZone')
+        self._forecast = data.get('forecast')
+        self._county = data.get('county')
+        self._fire_weather_zone = data.get('fireWeatherZone')
 
     # Static methods
     @staticmethod
-    def _from_json(input: dict) -> list:
+    def _from_json(api: Weatherpy, input: dict) -> list:
         """
         Returns a list of Station objects from a JSON-LD object
 
@@ -68,7 +62,7 @@ class Station:
 
         stations = []
         for item in input['@graph']:
-            station = Station(item.get('stationIdentifier'))
+            station = Station(api, item.get('stationIdentifier'))
             station._geometry = item.get('geometry')
             station._elevation = item.get('elevation')
             station._name = item.get('name')
@@ -82,6 +76,7 @@ class Station:
 
     @staticmethod
     def get_stations(
+            api: Weatherpy,
             state: str | list = None,
             limit: int = 500,
             cursor: str = None,
@@ -113,39 +108,23 @@ class Station:
             If raw is :const:`False`, returns a list of Station objects.
         """
 
-        endpoint = wp.api_url + '/stations'
+        endpoint = '/stations'
 
         params = {}
         if state:
             params['state'] = state
         if cursor:
             params['cursor'] = cursor
-        
-        if type(limit) != int:
-            raise ValueError("'limit' must be of type 'int'")
-        else:
-            params['limit'] = limit
+        params['limit'] = limit
 
-        headers = {
-            'Accept': 'application/ld+json',
-            'User-Agent': f'({wp.user_agent_client}, {wp.user_agent_email})'
-        }
-        if raw: # Users pulling raw data probably want GeoJSON
-            headers['Accept'] = 'application/geo+json'
+        accept = 'application/geo+json' if raw else 'application/ld+json'
 
-        r = requests.get(
-            endpoint,
-            headers=headers,
-            params=params,
-            timeout=wp.request_timeout
-        )
-        if r.status_code != 200:
-            raise Exception('API returned code ' + str(r.status_code))
+        r = api.query(endpoint, accept, params)
 
         if raw:
             return r.text
         else:
-            return Station._from_json(r.json())
+            return Station._from_json(api, r.json())
     
     # Getters and setters
     @property
