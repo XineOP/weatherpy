@@ -53,7 +53,3 @@ class Weatherpy:
     # Dunder methods
     def __repr__(self):
         return f'Weatherpy({self.user_agent_client}, {self.user_agent_email})'
-    
-if __name__ == '__main__':
-    test = Weatherpy('Weatherpy API Testing', 'zaccheus.mcfarland@gmail.com')
-    print(test)
