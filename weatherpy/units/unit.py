@@ -1,5 +1,5 @@
-class Unit():
-    pretty_unit_codes = {} # This dictionary should be filled out in subclasses
+class Unit:
+    _unit_pretty = '' # This functionality should be filled out in subclasses 
     def __init__(
             self,
             unitCode: str,
@@ -20,11 +20,7 @@ class Unit():
         return self._unit_code
     @property
     def unit_pretty(self):
-        unit_repr = self.pretty_unit_codes.get(self.unit_code)
-        if unit_repr is None:
-            raise ValueError(f'Unit code {self.unit_code} not found')
-        else:
-            return unit_repr
+        return self._unit_pretty
     @property
     def value(self):
         return self._value
